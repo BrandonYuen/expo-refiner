@@ -5309,6 +5309,11 @@ recast@^0.21.0:
     source-map "~0.6.1"
     tslib "^2.0.1"
 
+refiner-react-native@^1.3.5:
+  version "1.3.5"
+  resolved "https://registry.yarnpkg.com/refiner-react-native/-/refiner-react-native-1.3.5.tgz#e47f2162ecf99353abcaf834069e0c767fbb3807"
+  integrity sha512-uozCZZFAJ9jHsy4DhM1trW3I9v2lw+6m57I30WOD6zL41x9Uusd8upHQoUH3ouEfwUgagmmi7xbXG9AtcCNFvg==
+
 regenerate-unicode-properties@^10.1.0:
   version "10.1.1"
   resolved "https://registry.yarnpkg.com/regenerate-unicode-properties/-/regenerate-unicode-properties-10.1.1.tgz#6b0e05489d9076b04c436f318d9b067bba459480"
