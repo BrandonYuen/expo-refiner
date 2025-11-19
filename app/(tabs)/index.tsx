@@ -1,13 +1,117 @@
 import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { Platform, StyleSheet, NativeEventEmitter } from 'react-native';
+import { useEffect } from 'react';
 
 import { HelloWave } from '@/components/hello-wave';
 import ParallaxScrollView from '@/components/parallax-scroll-view';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Link } from 'expo-router';
+import RNRefiner from 'refiner-react-native';
+
+const RNRefinerEventEmitter = new NativeEventEmitter(RNRefiner);
 
 export default function HomeScreen() {
+  useEffect(() => {
+    // Check module availability
+    if (!RNRefiner) {
+      console.warn('RNRefiner module not available');
+      return;
+    }
+
+    // IMPORTANT: Set up event listeners BEFORE initializing the SDK
+    // This prevents the "Sending event with no listeners registered" warnings
+    let listeners: any[] = [];
+
+    if (RNRefinerEventEmitter) {
+      const beforeShowListener = RNRefinerEventEmitter.addListener(
+        'onBeforeShow',
+        (event: any) => {
+          console.log('onBeforeShow', event.formId);
+        }
+      );
+
+      const showListener = RNRefinerEventEmitter.addListener(
+        'onShow',
+        (event: any) => {
+          console.log('onShow', event.formId);
+        }
+      );
+
+      const dismissListener = RNRefinerEventEmitter.addListener(
+        'onDismiss',
+        (event: any) => {
+          console.log('onDismiss', event.formId);
+        }
+      );
+
+      const closeListener = RNRefinerEventEmitter.addListener(
+        'onClose',
+        (event: any) => {
+          console.log('onClose', event.formId);
+        }
+      );
+
+      const completeListener = RNRefinerEventEmitter.addListener(
+        'onComplete',
+        (event: any) => {
+          console.log('onComplete', event.formId);
+        }
+      );
+
+      const errorListener = RNRefinerEventEmitter.addListener(
+        'onError',
+        (event: any) => {
+          console.log('onError', event.message);
+        }
+      );
+
+      listeners = [
+        beforeShowListener,
+        showListener,
+        dismissListener,
+        closeListener,
+        completeListener,
+        errorListener,
+      ];
+    }
+
+    try {
+      // Initialize the Refiner SDK
+      RNRefiner.initialize('56421950-5d32-11ea-9bb4-9f1f1a987a49', true);
+
+      // User traits object
+      const userTraits = {
+        email: 'expo@test.com',
+        platform: 'expo',
+        architecture: 'new-arch-test',
+      };
+
+      // Identify user
+      RNRefiner.identifyUser('expo-user-123', userTraits, null, null, null);
+
+      // Add contextual data
+      const contextualData = {
+        app: 'expo-refiner',
+        screen: 'home',
+      };
+
+      RNRefiner.addToResponse(contextualData);
+
+      // Show form
+      RNRefiner.showForm('616fc500-5d32-11ea-8fd5-f140dbcb9780', true);
+
+      console.log('Refiner SDK initialized successfully');
+    } catch (error) {
+      console.error('Error initializing Refiner:', error);
+    }
+
+    // Cleanup function
+    return () => {
+      listeners.forEach(listener => listener.remove());
+    };
+  }, []);
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
@@ -18,22 +122,13 @@ export default function HomeScreen() {
         />
       }>
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
+        <ThemedText type="title">Welcome to Expo + Refiner!</ThemedText>
         <HelloWave />
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
+        <ThemedText type="subtitle">Refiner SDK Test</ThemedText>
         <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
+          The Refiner SDK has been initialized. Check the console for event logs.
         </ThemedText>
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
@@ -62,16 +157,6 @@ export default function HomeScreen() {
 
         <ThemedText>
           {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
         </ThemedText>
       </ThemedView>
     </ParallaxScrollView>
