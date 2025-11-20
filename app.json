@@ -23,7 +23,8 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.brandonshiftbase.exporefiner"
     },
     "web": {
       "output": "static",
@@ -53,6 +54,7 @@
       "eas": {
         "projectId": "6bd5c478-653e-4c08-a178-ad30e049da68"
       }
-    }
+    },
+    "owner": "brandonshiftbase"
   }
 }
